@@ -1,5 +1,5 @@
 # 🫁 CXR-Analyzer: Dual-Task COVID-19 Radiography AI
-> **Deep Learning-powered Chest X-Ray Analysis for COVID-19 Detection and Lung Segmentation**
+> **Deep Learning-powered Chest X-Ray Analysis for COVID-19 Detection and Lung Segmentation**  
 ![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white)
 ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
 ![OpenCV](https://img.shields.io/badge/opencv-%23white.svg?style=for-the-badge&logo=opencv&logoColor=white)
