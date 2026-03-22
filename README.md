@@ -12,18 +12,11 @@ This project utilizes a custom dual-headed U-Net architecture built in PyTorch t
 
 ---
 
-## 📸 Demo
-![CXR Analyzer App Demo](assets/demo.jpg)
-*The Streamlit web interface successfully classifying a Normal X-Ray with 99.98% confidence and rendering the corresponding mask overlays.*
-
----
-
 ## 📂 Project Structure
 
 ```text
 CXR-Analyzer/
 │
-├── assets/             # Folder for README images (like demo.jpg)
 ├── app.py              # Streamlit web interface for deployment
 ├── dataset.py          # Kaggle dataset parsing, DataLoaders, and v2 Transforms
 ├── evaluate.py         # Validation loop and Binary Jaccard Index (IoU) calculation
@@ -89,50 +82,6 @@ streamlit run app.py
 ```
 Once running, open <http://localhost:8051> in your web browser.
 
----
-
-## 🧠 Architecture Details
-
-The core of this project is the Dual-Head U-Net located in model.py.
-
-Unlike a standard U-Net that only decodes to a spatial mask, this model features a Branched Bottleneck:
-                         Input (256x256x3)
-                               │
-                        ┌──────▼──────┐
-                        │   ENCODER   │
-                        │  (Feature   │
-                        │ Extraction) │
-                        └──────┬──────┘
-                               │
-                     ┌─────────▼─────────┐
-                     │    BOTTLENECK      │
-                     │  (1024 channels)   │
-                     └────┬─────────┬────┘
-                          │         │
-               ┌──────────▼──┐  ┌───▼───────────┐
-               │  DECODER    │  │ CLASSIFICATION │
-               │ (Upsample + │  │     HEAD       │
-               │  Skip Conn) │  │ (GAP + FC)     │
-               └──────┬──────┘  └───────┬────────┘
-                      │                 │
-              ┌───────▼───────┐  ┌──────▼──────┐
-              │  Mask Output  │  │ Class Output │
-              │ (256x256x1)   │  │   (1x4)      │
-              └───────────────┘  └──────────────┘
-
-#### Components:
-
-| Component | Description |
-|------|-------------|
-| **Encoder Path** | Extracts hierarchical spatial features from the 256 × 256 input image. |
-| **Segmentation Head (Decoder)** | Upsamples the bottleneck features, concatenates them with encoder residuals, and outputs a 256 × 256 binary mask locating the opacities. |
-| **Classification Head** | Branches directly off the 1024-channel bottleneck, passing through AdaptiveAvgPool2d and fully connected layers to output probabilities for the 4 clinical classes. |
-
-#### Combined Loss Function
-The network is optimized using a custom combined loss function:
-```text
-L_total = (W_mask × BCEWithLogitsLoss) + (W_cls × CrossEntropyLoss)
-```
 ---
 
 ## 📄 License
